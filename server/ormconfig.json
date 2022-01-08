@@ -4,6 +4,7 @@
   "port": "5432",
   "username": "postgres",
   "password": "postgres",
-  "database": "thumbnailgame",
-  "entities": ["dist/entities/*.js"]
+  "database": "cuScheduling2",
+  "entities": ["dist/entities/*.js"],
+  "migrations": ["dist/migrations/*"]
 }

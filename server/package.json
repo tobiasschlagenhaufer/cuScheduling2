@@ -1,5 +1,5 @@
 {
-  "name": "wern-fullstack-template-server",
+  "name": "cuScheduling2",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -21,7 +21,7 @@
     "@types/express": "^4.17.7",
     "@types/express-session": "^1.17.0",
     "@types/ioredis": "^4.17.3",
-    "@types/node": "^14.0.27",
+    "@types/node": "^14.18.5",
     "@types/nodemailer": "^6.4.0",
     "@types/redis": "^2.8.25",
     "@types/uuid": "^8.0.1",
@@ -44,7 +44,7 @@
     "pg": "^8.3.0",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.0.0-rc.3",
-    "typeorm": "^0.2.25",
+    "typeorm": "^0.2.41",
     "uuid": "^8.3.0"
   },
   "mikro-orm": {

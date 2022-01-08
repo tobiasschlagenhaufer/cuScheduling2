@@ -10,21 +10,24 @@ import { createConnection } from 'typeorm'
 import { __prod__ } from './config'
 import { UserAccount } from './entities/index'
 import { UserResolver } from './resolvers/index'
+import { Section } from './entities/Section'
+import { TimeSlot } from './entities/TimeSlot'
 
 const main = async () => {
   console.log(process.env.DATABASE_URL)
-  /*const conn =*/ await createConnection({
+  const conn = await createConnection({
     type: 'postgres',
     url: process.env.DATABASE_URL,
     logging: true,
     //  do not want synchronize true in production, possiblility of losing data
     synchronize: false,
-    entities: [UserAccount],
+    entities: [UserAccount, Section, TimeSlot],
     migrations: [path.join(__dirname, './migrations/*')],
     //  need this to use postgres heroku plugin
-    ssl: {
-      rejectUnauthorized: false,
-    },
+    // ssl: {
+    //   rejectUnauthorized: false,
+    // },
+    ssl: false
   })
   // await conn.runMigrations()
 
