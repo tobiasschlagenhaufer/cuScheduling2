@@ -14,5 +14,13 @@ ${({ theme }) => css`
       font-family: Newsreader;
     }
   }
+
+  .colour-1 {
+    background-color: "#f55c7a"
+  }
+
+  .colour-2 {
+    background-color: "#f57c73"
+  }
 `}
 `

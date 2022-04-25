@@ -24,6 +24,7 @@ const index_1 = require("./entities/index");
 const index_2 = require("./resolvers/index");
 const Section_1 = require("./entities/Section");
 const TimeSlot_1 = require("./entities/TimeSlot");
+const Accessory_1 = require("./entities/Accessory");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     console.log(process.env.DATABASE_URL);
     const conn = yield typeorm_1.createConnection({
@@ -31,11 +32,10 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         url: process.env.DATABASE_URL,
         logging: true,
         synchronize: false,
-        entities: [index_1.UserAccount, Section_1.Section, TimeSlot_1.TimeSlot],
+        entities: [index_1.UserAccount, Section_1.Section, TimeSlot_1.TimeSlot, Accessory_1.Accessory],
         migrations: [path_1.default.join(__dirname, './migrations/*')],
         ssl: false
     });
-    yield conn.runMigrations();
     const app = express_1.default();
     app.set('trust proxy', 1);
     app.use(cors_1.default({
@@ -43,8 +43,9 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         credentials: true,
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
+        debug: true,
         schema: yield type_graphql_1.buildSchema({
-            resolvers: [index_2.UserResolver],
+            resolvers: [index_2.UserResolver, index_2.SectionResolver],
             validate: false,
         }),
         context: ({ req, res }) => ({

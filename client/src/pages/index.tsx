@@ -1,59 +1,35 @@
-import { withUrqlClient } from 'next-urql'
-import styled from 'styled-components'
-
-import { /*useGetUserQuery*/ useGetUsersQuery } from '../generated/graphql'
-import { Nav, ThemeToggle } from '../components/elements/index'
-import { createUrqlClient } from '../util/createURQLClient'
-import {
-  CenterContainer,
-  StyledGridContainer,
-  StyledHeaderText,
-  StyledSubText,
-} from '../styles/constantStyles'
-import { useMediaQuery } from '../hooks/useMediaQuery'
+import WithSubNavigation from '../components/Nav'
+import Hero from '../components/Hero'
+import Search from '../components/Search'
+import { Box, Stack, Container } from '@chakra-ui/react'
 
 const Home: React.FC = () => {
-  const [{ data }] = useGetUsersQuery()
-
-  //  example query with id parameter
-  // const [user] = useGetUserQuery({ variables: { id: '1' } })
-
-  const largerThan500px = useMediaQuery('(min-width: 775px)')
 
   return (
-    <>
-      <ThemeToggle />
-      <Nav />
-      {data &&
-        data.users?.map((user, i: number) => {
-          return (
-            <CenterContainer key={i}>
-              <StyledGridContainer>
-                <StyledUserContainer largerThan500px={largerThan500px}>
-                  <StyledHeaderText>{user.username}</StyledHeaderText>
-                  <StyledSubText>Id: {user.id}</StyledSubText>
-                  <StyledSubText>{user.email}</StyledSubText>
-                </StyledUserContainer>
-              </StyledGridContainer>
-            </CenterContainer>
-          )
-        })}
-    </>
+    <Box>
+      <WithSubNavigation/>
+      <Box
+        bg={'gray.100'}
+        css={{
+          backgroundAttachment: 'fixed',
+        }}>
+        <Stack
+          as={Container}
+          maxW={'7xl'}
+          py={{ base: 10, lg: 10 }}
+          spacing={{ base: 10, lg: 24 }}
+          direction={{ base: 'column', lg: 'row' }}
+          alignItems={'start'}
+          height="2xl"
+        >
+          <Stack w="4xl">
+            <Hero/>
+            <Search/>
+          </Stack>
+        </Stack>
+      </Box>
+    </Box>
   )
 }
 
-interface StyledUserContainerProps {
-  largerThan500px: boolean
-}
-
-const StyledUserContainer = styled.div<StyledUserContainerProps>`
-  width: ${(props) => (props.largerThan500px ? '700px' : '90%')};
-  height: 100%;
-  padding: 15px;
-  margin: 20px 0px 20px 0px;
-  border-radius: 10px;
-  background-color: ${(props) => props.theme.secondary};
-`
-
-//  creates client with server side rendering enabled
-export default withUrqlClient(createUrqlClient, { ssr: true })(Home)
+export default Home;

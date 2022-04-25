@@ -1,0 +1,7 @@
+query getSectionNames {
+  sectionNames {
+    label
+    value
+    num_avail
+  }
+}

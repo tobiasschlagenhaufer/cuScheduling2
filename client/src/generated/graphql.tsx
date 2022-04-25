@@ -14,6 +14,31 @@ export type Scalars = {
   Float: number;
 };
 
+export type Accessory = {
+  __typename?: 'Accessory';
+  crn: Scalars['String'];
+  course_id: Scalars['String'];
+  section_id: Scalars['String'];
+  title: Scalars['String'];
+  semester: Scalars['String'];
+  year: Scalars['Float'];
+  location: Scalars['String'];
+  instructor: Scalars['String'];
+  start_hr: Scalars['Float'];
+  start_min: Scalars['Float'];
+  duration: Scalars['Float'];
+  days: Array<Scalars['String']>;
+  status: Scalars['String'];
+  section: Section;
+};
+
+export type AutocompleteName = {
+  __typename?: 'AutocompleteName';
+  label: Scalars['String'];
+  num_avail: Scalars['String'];
+  value: Scalars['String'];
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -34,11 +59,53 @@ export type Query = {
   __typename?: 'Query';
   user?: Maybe<UserAccount>;
   users?: Maybe<Array<UserAccount>>;
+  section?: Maybe<Section>;
+  sections?: Maybe<Array<Section>>;
+  sectionNames?: Maybe<Array<AutocompleteName>>;
+  schedules?: Maybe<Array<Schedule>>;
 };
 
 
 export type QueryUserArgs = {
   id: Scalars['String'];
+};
+
+
+export type QuerySectionArgs = {
+  crn: Scalars['Float'];
+};
+
+
+export type QuerySchedulesArgs = {
+  schedule_in: ScheduleInput;
+};
+
+export type Schedule = {
+  __typename?: 'Schedule';
+  blocks: Array<Section>;
+};
+
+export type ScheduleInput = {
+  course_ids: Array<Scalars['String']>;
+  semester: Scalars['String'];
+};
+
+export type Section = {
+  __typename?: 'Section';
+  crn: Scalars['String'];
+  course_id: Scalars['String'];
+  section_id: Scalars['String'];
+  title: Scalars['String'];
+  semester: Scalars['String'];
+  year: Scalars['Float'];
+  location: Scalars['String'];
+  instructor: Scalars['String'];
+  start_hr: Scalars['Float'];
+  start_min: Scalars['Float'];
+  duration: Scalars['Float'];
+  days: Array<Scalars['String']>;
+  status: Scalars['String'];
+  accessories?: Maybe<Array<Accessory>>;
 };
 
 export type UserAccount = {
@@ -83,6 +150,33 @@ export type CreateUserMutation = (
   ) }
 );
 
+export type GetSchedulesQueryVariables = Exact<{
+  schedule_in: ScheduleInput;
+}>;
+
+
+export type GetSchedulesQuery = (
+  { __typename?: 'Query' }
+  & { schedules?: Maybe<Array<(
+    { __typename?: 'Schedule' }
+    & { blocks: Array<(
+      { __typename?: 'Section' }
+      & Pick<Section, 'crn' | 'course_id' | 'section_id' | 'title' | 'days' | 'status' | 'location' | 'instructor' | 'start_hr' | 'start_min' | 'duration'>
+    )> }
+  )>> }
+);
+
+export type GetSectionNamesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSectionNamesQuery = (
+  { __typename?: 'Query' }
+  & { sectionNames?: Maybe<Array<(
+    { __typename?: 'AutocompleteName' }
+    & Pick<AutocompleteName, 'label' | 'value' | 'num_avail'>
+  )>> }
+);
+
 export type GetUserQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -125,6 +219,42 @@ export const CreateUserDocument = gql`
 
 export function useCreateUserMutation() {
   return Urql.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument);
+};
+export const GetSchedulesDocument = gql`
+    query getSchedules($schedule_in: ScheduleInput!) {
+  schedules(schedule_in: $schedule_in) {
+    blocks {
+      crn
+      course_id
+      section_id
+      title
+      days
+      status
+      location
+      instructor
+      start_hr
+      start_min
+      duration
+    }
+  }
+}
+    `;
+
+export function useGetSchedulesQuery(options: Omit<Urql.UseQueryArgs<GetSchedulesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetSchedulesQuery>({ query: GetSchedulesDocument, ...options });
+};
+export const GetSectionNamesDocument = gql`
+    query getSectionNames {
+  sectionNames {
+    label
+    value
+    num_avail
+  }
+}
+    `;
+
+export function useGetSectionNamesQuery(options: Omit<Urql.UseQueryArgs<GetSectionNamesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetSectionNamesQuery>({ query: GetSectionNamesDocument, ...options });
 };
 export const GetUserDocument = gql`
     query getUser($id: String!) {

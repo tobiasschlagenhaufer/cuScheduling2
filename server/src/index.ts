@@ -9,9 +9,10 @@ import { createConnection } from 'typeorm'
 
 import { __prod__ } from './config'
 import { UserAccount } from './entities/index'
-import { UserResolver } from './resolvers/index'
+import { SectionResolver, UserResolver } from './resolvers/index'
 import { Section } from './entities/Section'
 import { TimeSlot } from './entities/TimeSlot'
+import { Accessory } from './entities/Accessory'
 
 const main = async () => {
   console.log(process.env.DATABASE_URL)
@@ -21,7 +22,7 @@ const main = async () => {
     logging: true,
     //  do not want synchronize true in production, possiblility of losing data
     synchronize: false,
-    entities: [UserAccount, Section, TimeSlot],
+    entities: [UserAccount, Section, TimeSlot, Accessory],
     migrations: [path.join(__dirname, './migrations/*')],
     //  need this to use postgres heroku plugin
     // ssl: {
@@ -30,6 +31,14 @@ const main = async () => {
     ssl: false
   })
   // await conn.runMigrations()
+
+  // const sectionRepository = conn.getRepository(Section)
+  // const sections = await sectionRepository.findOne({
+  //   where: {crn: 100000},
+  //   relations: ['accessories']
+  // });
+  // console.log(sections);
+  // console.log(sections?.accessories);
 
   const app = express()
 
@@ -42,8 +51,9 @@ const main = async () => {
   )
 
   const apolloServer = new ApolloServer({
+    debug: true,
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, SectionResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

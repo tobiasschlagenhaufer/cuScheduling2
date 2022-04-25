@@ -1,0 +1,17 @@
+query getSchedules($schedule_in: ScheduleInput!) {
+  schedules(schedule_in: $schedule_in) {
+    blocks {
+      crn
+      course_id
+      section_id
+      title
+      days
+      status
+      location
+      instructor
+      start_hr
+      start_min
+      duration
+    }
+  }
+}

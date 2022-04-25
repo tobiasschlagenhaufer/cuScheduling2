@@ -4,16 +4,16 @@ import {
   Column,
   BaseEntity,
   Index,
-  OneToMany,
+  ManyToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { Accessory } from './Accessory';
-import { Day, Semester, Status } from '../utils/enums';
+import { Section } from './Section';
+import { Day, Semester, Status } from '../utils/enums'
 
 @ObjectType()
 @Entity()
 @Index(["crn"])
-export class Section extends BaseEntity {
+export class Accessory extends BaseEntity {
   @Field()
   @PrimaryColumn()
   crn!: string;
@@ -34,6 +34,7 @@ export class Section extends BaseEntity {
   @Column({
     type: "enum",
     enum: Semester,
+    name: 'semester'
   })
   semester!: string;
 
@@ -73,11 +74,10 @@ export class Section extends BaseEntity {
   @Column({
     type: "enum",
     enum: Status,
-    default: Status.OPEN,
   })
   status!: Status;
 
-  @Field(() => [Accessory], {nullable: true})
-  @OneToMany(() => Accessory, accessory => accessory.section)
-  accessories: Accessory[];
+  @Field(() => Section)
+  @ManyToOne(() => Section, section => section.accessories)
+  section: Section;
 }

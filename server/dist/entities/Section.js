@@ -9,23 +9,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Section = exports.Status = void 0;
+exports.Section = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-const TimeSlot_1 = require("./TimeSlot");
-var Status;
-(function (Status) {
-    Status["OPEN"] = "open";
-    Status["WAITLIST"] = "waitlist";
-    Status["FULL"] = "full";
-})(Status = exports.Status || (exports.Status = {}));
+const Accessory_1 = require("./Accessory");
+const enums_1 = require("../utils/enums");
 let Section = class Section extends typeorm_1.BaseEntity {
 };
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.PrimaryGeneratedColumn(),
-    __metadata("design:type", Number)
-], Section.prototype, "id", void 0);
+    typeorm_1.PrimaryColumn(),
+    __metadata("design:type", String)
+], Section.prototype, "crn", void 0);
 __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column(),
@@ -40,15 +35,13 @@ __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column(),
     __metadata("design:type", String)
-], Section.prototype, "crn", void 0);
-__decorate([
-    type_graphql_1.Field(),
-    typeorm_1.Column(),
-    __metadata("design:type", String)
 ], Section.prototype, "title", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column(),
+    typeorm_1.Column({
+        type: "enum",
+        enum: enums_1.Semester,
+    }),
     __metadata("design:type", String)
 ], Section.prototype, "semester", void 0);
 __decorate([
@@ -67,28 +60,47 @@ __decorate([
     __metadata("design:type", String)
 ], Section.prototype, "instructor", void 0);
 __decorate([
-    type_graphql_1.Field(type => [TimeSlot_1.TimeSlot]),
-    typeorm_1.ManyToMany(type => TimeSlot_1.TimeSlot, timeslot => timeslot.sections),
-    typeorm_1.JoinTable(),
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Section.prototype, "start_hr", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Section.prototype, "start_min", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Section.prototype, "duration", void 0);
+__decorate([
+    type_graphql_1.Field(() => [enums_1.Day]),
+    typeorm_1.Column({
+        type: "enum",
+        enum: enums_1.Day,
+        array: true
+    }),
     __metadata("design:type", Array)
-], Section.prototype, "timeslots", void 0);
+], Section.prototype, "days", void 0);
 __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column({
         type: "enum",
-        enum: Status,
-        default: Status.OPEN,
+        enum: enums_1.Status,
+        default: enums_1.Status.OPEN,
     }),
     __metadata("design:type", String)
 ], Section.prototype, "status", void 0);
 __decorate([
-    type_graphql_1.Field(type => [type_graphql_1.Int]),
-    typeorm_1.Column("int", { array: true }),
+    type_graphql_1.Field(() => [Accessory_1.Accessory], { nullable: true }),
+    typeorm_1.OneToMany(() => Accessory_1.Accessory, accessory => accessory.section),
     __metadata("design:type", Array)
-], Section.prototype, "extras", void 0);
+], Section.prototype, "accessories", void 0);
 Section = __decorate([
     type_graphql_1.ObjectType(),
-    typeorm_1.Entity()
+    typeorm_1.Entity(),
+    typeorm_1.Index(["crn"])
 ], Section);
 exports.Section = Section;
 //# sourceMappingURL=Section.js.map
