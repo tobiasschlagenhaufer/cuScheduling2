@@ -1,5 +1,7 @@
 CUScheduling2: COMP4995 Honours Thesis Project
 
+This project was forked from a basic Server-CLient Template.
+
 ## Uses the following technologies:
 
 - React
